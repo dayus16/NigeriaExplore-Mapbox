@@ -157,11 +157,108 @@ const Map = () => {
           </button>
         ))}
       </div>
-      <div className="flex">
+      <div className="flex h-[calc(100vh-140px)]">
         <div className="w-[70%]">
-          <div ref={mapContainerRef} style={{ height: "100vh" }}></div>
+          <div ref={mapContainerRef} className="h-full w-full"></div>
         </div>
-        <div className="w-[30%]"></div>
+        <div className="w-[30%] h-full overflow-y-auto">
+          {!selectedLandmark && (
+            <div>
+              <div className="flex flex-col justify-center items-center">
+                <div className="text-4xl mb-4">📍</div>
+                <h3 className="text-gray-700 mb-2">Click any landmark</h3>
+                <p className="text-sm text-gray-400">
+                  Click a pin on the map to learn about that landmark
+                </p>
+              </div>
+              <div className="p-4">
+                <p className="text-xs text-gray-400 uppercase mb-2">
+                  All landmarks
+                </p>
+                <div className="space-y-4">
+                  {filteredLandmarks.map((filter) => (
+                    <div
+                      key={filter.id}
+                      onClick={() => {
+                        setSelectedLandmark(filter);
+                        mapRef.current.flyTo({
+                          center: filter.coordinates,
+                          zoom: 5,
+                          duration: 1500,
+                        });
+                      }}
+                      className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-50 mb-1"
+                    >
+                      <span text-xl>{filter.emoji}</span>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700">
+                          {filter.name}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {filter.location}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+          {selectedLandmark && (
+            <div>
+              <div
+                className="h-36 flex items-center justify-center text-6xl relative"
+                style={{
+                  background: `linear-gradient(135deg, ${selectedLandmark.color}, ${selectedLandmark.color}99)`,
+                }}
+              >
+                {selectedLandmark.emoji}
+                <span
+                  className="absolute top-2 left-2 bg-white text-xs px-2 py-0.5 rounded-full font-medium capitalize"
+                  style={{ color: selectedLandmark.color }}
+                >
+                  {selectedLandmark.category}
+                </span>
+                <button
+                  onClick={() => setSelectedLandmark(null)}
+                  className="absolute top-2 right-2 bg-white bg-opacity-80 text-gray-600 w-7 h-7 rounded-full text-sm hover:bg-opacity-100"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="p-4">
+                <p className="text-lg font-bold text-gray-800">
+                  {selectedLandmark.name}
+                </p>
+                <div className="flex items-center gap-2 mt-2">
+                  <span>📍</span>
+                  <p className="text-sm text-gray-500">
+                    {selectedLandmark.location}
+                  </p>
+                </div>
+                <p className="text-sm text-gray-600 mt-3 leading-relaxed">
+                  {selectedLandmark.description}
+                </p>
+                <h3 className="text-sm font-semibold text-gray-700 mt-4 mb-2">
+                  Quick facts
+                </h3>
+                <div className="mt-2">
+                  {selectedLandmark.facts.map((fact, index) => (
+                    <div key={index} className="flex items-start gap-2 mb-2">
+                      <div
+                        className="w-2 h-2 rounded-full mt-1.5 shrink-0"
+                        style={{ background: selectedLandmark.color }}
+                      ></div>
+                      <p className="text-xs text-gray-500 leading-relaxed">
+                        {fact}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
