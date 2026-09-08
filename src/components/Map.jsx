@@ -256,6 +256,33 @@ const Map = () => {
                   ))}
                 </div>
               </div>
+              <div className="flex items-center p-4 gap-3 border-t border-gray-200">
+                <button
+                  className="py-2 rounded-lg w-60 cursor-pointer text-sm font-medium"
+                  style={{ background: selectedLandmark.color }}
+                  onClick={() => {
+                    window.open(
+                      `https://www.google.com/maps/dir/?api=1&destination=${selectedLandmark.coordinates[1]},${selectedLandmark.coordinates[0]}`,
+                      "_blank",
+                    );
+                  }}
+                >
+                  🗺 Directions
+                </button>
+                <button
+                  className="border border-gray-300 text-sm text-gray-600 py-1.5 px-4 rounded-lg hover:bg-gray-50"
+                  onClick={() => {
+                    setSelectedLandmark(null);
+                    mapRef.current.flyTo({
+                      center: [8.6753, 9.082],
+                      zoom: 5,
+                      duration: 1500,
+                    });
+                  }}
+                >
+                  ← Back
+                </button>
+              </div>
             </div>
           )}
         </div>
